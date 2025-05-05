@@ -5,10 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "workout_plans")
 data class WorkoutPlan(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val name: String,
     val duration: String,
     val level: String,
     val target: String,
-    val imageResId: Int
+    val imageResId: Int // Assuming you are using resource IDs for images
+    // Add other relevant fields
 )

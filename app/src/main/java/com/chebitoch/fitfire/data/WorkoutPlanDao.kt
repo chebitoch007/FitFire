@@ -1,25 +1,26 @@
-package com.chebitoch.fitfire.data.local
+package com.chebitoch.fitfire.data
 
 import androidx.room.*
-import com.chebitoch.fitfire.data.model.WorkoutPlan
 import com.chebitoch.fitfire.model.WorkoutPlan
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkoutPlanDao {
-
     @Query("SELECT * FROM workout_plans")
-    fun getAllPlans(): Flow<List<WorkoutPlan>>
+    fun getAllWorkoutPlans(): Flow<List<WorkoutPlan>>
 
     @Query("SELECT * FROM workout_plans WHERE id = :id")
-    suspend fun getPlanById(id: Int): WorkoutPlan?
+    suspend fun getWorkoutPlanById(id: Int): WorkoutPlan?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlan(plan: WorkoutPlan)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertWorkoutPlan(workoutPlan: WorkoutPlan)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(plans: List<WorkoutPlan>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertWorkoutPlans(workoutPlans: List<WorkoutPlan>)
+
+    @Update
+    suspend fun updateWorkoutPlan(workoutPlan: WorkoutPlan)
 
     @Delete
-    suspend fun deletePlan(plan: WorkoutPlan)
+    suspend fun deleteWorkoutPlan(workoutPlan: WorkoutPlan)
 }

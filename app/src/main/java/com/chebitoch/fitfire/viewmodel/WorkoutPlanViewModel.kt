@@ -1,60 +1,51 @@
 package com.chebitoch.fitfire.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.chebitoch.fitfire.data.model.WorkoutPlan
-import com.chebitoch.fitfire.data.repository.WorkoutPlanRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.chebitoch.fitfire.R
+import com.chebitoch.fitfire.data.FitFireDatabase
+import com.chebitoch.fitfire.repository.WorkoutPlanRepository
+import com.chebitoch.fitfire.model.WorkoutPlan
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class WorkoutPlanViewModel @Inject constructor(
+class WorkoutPlanViewModel(application: Application) : AndroidViewModel(application) {
+
     private val repository: WorkoutPlanRepository
-) : ViewModel() {
-
-    private val _allPlans = MutableStateFlow<List<WorkoutPlan>>(emptyList())
-    val allPlans: StateFlow<List<WorkoutPlan>> = _allPlans.asStateFlow()
-
-    private val _selectedPlan = MutableStateFlow<WorkoutPlan?>(null)
-    val selectedPlan: StateFlow<WorkoutPlan?> = _selectedPlan.asStateFlow()
+    val allPlans: Flow<List<WorkoutPlan>>
 
     init {
-        loadWorkoutPlans()
+        val workoutPlanDao = FitFireDatabase.getDatabase(application).workoutPlanDao()
+        repository = WorkoutPlanRepository(workoutPlanDao)
+        allPlans = repository.allWorkoutPlans
     }
 
-    private fun loadWorkoutPlans() {
-        viewModelScope.launch {
-            repository.getAllPlans().collect { plans ->
-                _allPlans.value = plans
+    fun insertWorkoutPlan(workoutPlan: WorkoutPlan) = viewModelScope.launch {
+        repository.insertWorkoutPlan(workoutPlan)
+    }
+
+    fun insertSamplePlans() = viewModelScope.launch {
+        val samplePlans = listOf(
+            WorkoutPlan(name = "Full Body Strength", duration = "45 mins", level = "Intermediate", target = "Overall Strength", imageResId = R.drawable.ic_launcher_foreground),
+            WorkoutPlan(name = "Cardio Blast", duration = "30 mins", level = "Beginner", target = "Cardiovascular Health", imageResId = R.drawable.ic_launcher_foreground),
+            WorkoutPlan(name = "Leg Day Focus", duration = "60 mins", level = "Advanced", target = "Lower Body Strength", imageResId = R.drawable.ic_launcher_foreground)
+            // Add more sample plans
+        )
+        repository.insertWorkoutPlans(samplePlans)
+    }
+
+    // You can add other functions like update and delete if needed
+
+    class WorkoutPlanViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(WorkoutPlanViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return WorkoutPlanViewModel(application) as T
             }
-        }
-    }
-
-    fun getWorkoutPlanById(id: Int) {
-        viewModelScope.launch {
-            _selectedPlan.value = repository.getPlanById(id)
-        }
-    }
-
-    fun insertSamplePlans() {
-        viewModelScope.launch {
-            repository.insertSamplePlans()
-        }
-    }
-
-    fun insertWorkoutPlan(plan: WorkoutPlan) {
-        viewModelScope.launch {
-            repository.insertPlan(plan)
-        }
-    }
-
-    fun deleteWorkoutPlan(plan: WorkoutPlan) {
-        viewModelScope.launch {
-            repository.deletePlan(plan)
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }
