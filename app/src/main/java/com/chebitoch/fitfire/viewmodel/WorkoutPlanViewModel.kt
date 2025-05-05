@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.chebitoch.fitfire.R
-import com.chebitoch.fitfire.data.FitFireDatabase
+import com.chebitoch.fitfire.data.AppDatabase
 import com.chebitoch.fitfire.repository.WorkoutPlanRepository
 import com.chebitoch.fitfire.model.WorkoutPlan
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +18,7 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
     val allPlans: Flow<List<WorkoutPlan>>
 
     init {
-        val workoutPlanDao = FitFireDatabase.getDatabase(application).workoutPlanDao()
+        val workoutPlanDao = AppDatabase.getDatabase(application).workoutPlanDao()
         repository = WorkoutPlanRepository(workoutPlanDao)
         allPlans = repository.allWorkoutPlans
     }

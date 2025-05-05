@@ -15,13 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.chebitoch.fitfire.viewmodel.UserViewModel.ProfileViewModel
-import com.chebitoch.fitfire.viewmodel.UserViewModel.UserProfile
+import com.chebitoch.fitfire.viewmodel.ProfileViewModel
+import com.chebitoch.fitfire.viewmodel.UserProfile as ViewModelUserProfile // Alias to avoid naming conflict
+import com.chebitoch.fitfire.model.UserProfile as RoomUserProfile
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +33,7 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel = viewModel()
 ) {
     val userProfile by profileViewModel.userProfile.collectAsState()
+    val context = LocalContext.current // Get context for database initialization
 
     Scaffold(
         topBar = {
@@ -42,12 +46,20 @@ fun ProfileScreen(
             )
         }
     ) { padding ->
-        ProfileContent(userProfile = userProfile, padding = padding)
+        ProfileContent(
+            userProfile = userProfile,
+            padding = padding,
+            onSaveProfile = { profileViewModel.saveUserProfile(it) } // Pass the save function
+        )
     }
 }
 
 @Composable
-fun ProfileContent(userProfile: UserProfile, padding: PaddingValues = PaddingValues()) {
+fun ProfileContent(
+    userProfile: ViewModelUserProfile,
+    padding: PaddingValues = PaddingValues(),
+    onSaveProfile: (RoomUserProfile) -> Unit // Callback to save profile
+) {
     Column(
         modifier = Modifier
             .padding(padding)
@@ -85,6 +97,15 @@ fun ProfileContent(userProfile: UserProfile, padding: PaddingValues = PaddingVal
 
         Button(
             onClick = {
+                // For demonstration, let's save the current displayed data
+                val roomUserProfile = RoomUserProfile(
+                    name = userProfile.name,
+                    age = userProfile.age,
+                    height = userProfile.height,
+                    weight = userProfile.weight,
+                    goal = userProfile.goal
+                )
+                onSaveProfile(roomUserProfile)
                 // TODO: Navigate to edit profile screen
             },
             modifier = Modifier

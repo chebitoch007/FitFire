@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.chebitoch.fitfire"
-    compileSdk = 35
+    compileSdk = 21
 
     defaultConfig {
         applicationId = "com.chebitoch.fitfire"
