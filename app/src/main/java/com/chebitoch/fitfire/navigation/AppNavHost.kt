@@ -1,5 +1,6 @@
 package com.chebitoch.fitfire.navigation
 
+import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -30,7 +31,7 @@ fun AppNavHost(
     startDestination: String = ROUT_SPLASH
 ) {
     val context = LocalContext.current
-    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(context.applicationContext))
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(context.applicationContext as Application))
 
     NavHost(
         navController = navController,

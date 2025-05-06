@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,21 +19,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.chebitoch.fitfire.data.AppDatabase
 import com.chebitoch.fitfire.viewmodel.ProfileViewModel
-import com.chebitoch.fitfire.viewmodel.UserProfile as ViewModelUserProfile // Alias to avoid naming conflict
-import com.chebitoch.fitfire.model.UserProfile as RoomUserProfile
+import com.chebitoch.fitfire.viewmodel.UserProfile as ViewModelUserProfile
+import com.chebitoch.fitfire.model.UserProfileEntity // Using the correct Room Entity
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    profileViewModel: ProfileViewModel = viewModel()
+    // No default ViewModel here
 ) {
+    val context = LocalContext.current
+    val database = remember { AppDatabase.getDatabase(context) } // Get your database instance
+    val userDao = remember { database.userProfileDao() } // Get the DAO
+    val profileViewModel = remember { ProfileViewModel(userDao) } // Create the ViewModel
+
     val userProfile by profileViewModel.userProfile.collectAsState()
-    val context = LocalContext.current // Get context for database initialization
 
     Scaffold(
         topBar = {
@@ -49,16 +53,16 @@ fun ProfileScreen(
         ProfileContent(
             userProfile = userProfile,
             padding = padding,
-            onSaveProfile = { profileViewModel.saveUserProfile(it) } // Pass the save function
+            onSaveProfile = profileViewModel::saveUserProfile // Correctly passing the ViewModel's save function
         )
     }
 }
 
 @Composable
-fun ProfileContent(
+fun ProfileContent( // Removed the redundant @Composable annotation
     userProfile: ViewModelUserProfile,
     padding: PaddingValues = PaddingValues(),
-    onSaveProfile: (RoomUserProfile) -> Unit // Callback to save profile
+    onSaveProfile: (ViewModelUserProfile) -> Unit // Updated to accept ViewModelUserProfile
 ) {
     Column(
         modifier = Modifier
@@ -97,15 +101,7 @@ fun ProfileContent(
 
         Button(
             onClick = {
-                // For demonstration, let's save the current displayed data
-                val roomUserProfile = RoomUserProfile(
-                    name = userProfile.name,
-                    age = userProfile.age,
-                    height = userProfile.height,
-                    weight = userProfile.weight,
-                    goal = userProfile.goal
-                )
-                onSaveProfile(roomUserProfile)
+                onSaveProfile(userProfile) // Now passing the ViewModelUserProfile directly
                 // TODO: Navigate to edit profile screen
             },
             modifier = Modifier
@@ -116,21 +112,6 @@ fun ProfileContent(
             Text("Edit Profile")
         }
 
-        OutlinedButton(
-            onClick = {
-                // TODO: Add logout logic if applicable
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
-                .height(48.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
-        ) {
-            Icon(Icons.Default.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Logout", color = MaterialTheme.colorScheme.error)
-        }
     }
 }
 

@@ -4,16 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.chebitoch.fitfire.model.User // Assuming User is in this package
-import com.chebitoch.fitfire.model.UserProfile // Assuming UserProfile is in this package
-import com.chebitoch.fitfire.model.WorkoutPlan // Ensure this import exists
+import com.chebitoch.fitfire.model.User // Assuming this is your User Room Entity
+import com.chebitoch.fitfire.model.UserProfileEntity // Using the correct UserProfile Room Entity
+import com.chebitoch.fitfire.model.WorkoutPlan // Assuming this is your WorkoutPlan Room Entity
 
-@Database(entities = [UserProfile::class, User::class, WorkoutPlan::class], version = 1, exportSchema = false)
+@Database(
+    entities = [UserProfileEntity::class, User::class, WorkoutPlan::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userProfileDao(): UserProfileDao
-    abstract fun userDao(): UserDao
-    abstract fun workoutPlanDao(): WorkoutPlanDao
+    abstract fun userDao(): UserDao // Ensure this DAO exists
+    abstract fun workoutPlanDao(): WorkoutPlanDao // Ensure this DAO exists
 
     companion object {
         @Volatile
@@ -24,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "fitfire_db" // Keep a consistent database name
+                    "fitfire_db" // Using a consistent database name
                 ).build()
                 INSTANCE = instance
                 instance

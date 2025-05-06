@@ -95,7 +95,7 @@ fun ProgressTrackerScreen(navController: NavController) {
 
 @Composable
 fun SummaryCard(title: String, value: String, iconResId: Int) {
-    Row (){
+    Row {
     Card(
         modifier = Modifier
             .weight(1f)

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.chebitoch.fitfire"
-    compileSdk = 21
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.chebitoch.fitfire"
@@ -60,6 +60,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
 
     //Navigation
@@ -67,15 +68,15 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.9")
 
     //Room
-    implementation ("androidx.room:room-runtime:2.6.1")
-    kapt ("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-runtime:2.7.1")
+    kapt ("androidx.room:room-compiler:2.7.1")
+    implementation ("androidx.room:room-ktx:2.7.1")
 
     // Image Loading (Coil for Jetpack Compose)
     implementation ("io.coil-kt:coil-compose:2.4.0")
 
     //Livedata
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.4")
+    implementation("androidx.compose.runtime:runtime-livedata:1.8.0")
 
 
 
