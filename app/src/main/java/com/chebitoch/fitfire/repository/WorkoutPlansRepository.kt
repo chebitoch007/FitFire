@@ -27,4 +27,8 @@ class WorkoutPlanRepository(private val workoutPlanDao: WorkoutPlanDao) {
     suspend fun deleteWorkoutPlan(workoutPlan: WorkoutPlan) {
         workoutPlanDao.deleteWorkoutPlan(workoutPlan)
     }
+
+    suspend fun deleteWorkoutPlanById(id: Int) {
+        workoutPlanDao.deleteWorkoutPlanById(id)
+    }
 }

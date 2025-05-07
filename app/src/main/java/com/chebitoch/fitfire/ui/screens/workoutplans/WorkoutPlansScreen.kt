@@ -27,14 +27,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.chebitoch.fitfire.model.WorkoutPlan
-import com.chebitoch.fitfire.ui.theme.FitFireTheme
 import com.chebitoch.fitfire.viewmodel.WorkoutPlanViewModel
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.Alignment
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutPlansScreen(
     navController: NavController,
-    viewModel: WorkoutPlanViewModel = viewModel(factory = WorkoutPlanViewModel.WorkoutPlanViewModelFactory(LocalContext.current as Application))
+    viewModel: WorkoutPlanViewModel = viewModel(factory = WorkoutPlanViewModel.WorkoutPlanViewModelFactory(LocalContext.current.applicationContext as Application))
 ){
     val workoutPlans by viewModel.allPlans.collectAsState(initial = emptyList())
 
@@ -62,38 +65,51 @@ fun WorkoutPlansScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(workoutPlans) { plan ->
-                WorkoutPlanCard(plan = plan) {
-                    navController.navigate("workout_detail/${plan.id}")
-                }
+                WorkoutPlanCard(
+                    plan = plan,
+                    onPlanClick = { navController.navigate("workout_detail/${plan.id}") },
+                    onDeleteClick = { viewModel.deleteWorkoutPlan(plan) }
+                )
             }
         }
     }
 }
 
 @Composable
-fun WorkoutPlanCard(plan: WorkoutPlan, onClick: () -> Unit) {
+fun WorkoutPlanCard(plan: WorkoutPlan, onPlanClick: () -> Unit, onDeleteClick: (WorkoutPlan) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable { onPlanClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Image(
-                painter = painterResource(id = plan.imageResId),
-                contentDescription = "${plan.name} image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .padding(end = 16.dp)
-            )
-            Column(verticalArrangement = Arrangement.Center) {
-                Text(plan.name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Text(plan.duration, fontSize = 14.sp, color = Color.Gray)
-                Text(plan.level, fontSize = 14.sp, color = Color.Gray)
-                Text(plan.target, fontSize = 14.sp, color = Color.Gray)
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = plan.imageResId),
+                    contentDescription = "${plan.name} image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .padding(end = 16.dp)
+                )
+                Column(verticalArrangement = Arrangement.Center) {
+                    Text(plan.name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text(plan.duration, fontSize = 14.sp, color = Color.Gray)
+                    Text(plan.level, fontSize = 14.sp, color = Color.Gray)
+                    Text(plan.target, fontSize = 14.sp, color = Color.Gray)
+                }
+            }
+            IconButton(onClick = { onDeleteClick(plan) }) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete Plan", tint = Color.Red)
             }
         }
     }
@@ -102,7 +118,5 @@ fun WorkoutPlanCard(plan: WorkoutPlan, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun WorkoutPlansScreenPreview() {
-    FitFireTheme {
-        WorkoutPlansScreen(navController = rememberNavController())
-    }
+    WorkoutPlansScreen(navController = rememberNavController())
 }

@@ -37,7 +37,17 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
         repository.insertWorkoutPlans(samplePlans)
     }
 
-    // You can add other functions like update and delete if needed
+    fun updateWorkoutPlan(workoutPlan: WorkoutPlan) = viewModelScope.launch {
+        repository.updateWorkoutPlan(workoutPlan)
+    }
+
+    fun deleteWorkoutPlan(workoutPlan: WorkoutPlan) = viewModelScope.launch {
+        repository.deleteWorkoutPlan(workoutPlan)
+    }
+
+    fun deleteWorkoutPlanById(planId: Int) = viewModelScope.launch {
+        repository.deleteWorkoutPlanById(planId)
+    }
 
     class WorkoutPlanViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

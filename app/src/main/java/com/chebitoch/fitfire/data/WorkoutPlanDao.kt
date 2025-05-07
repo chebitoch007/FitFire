@@ -21,6 +21,9 @@ interface WorkoutPlanDao {
     @Update
     suspend fun updateWorkoutPlan(workoutPlan: WorkoutPlan)
 
+    @Query("DELETE FROM workout_plans WHERE id = :id")
+    suspend fun deleteWorkoutPlanById(id: Int)
+
     @Delete
     suspend fun deleteWorkoutPlan(workoutPlan: WorkoutPlan)
 }

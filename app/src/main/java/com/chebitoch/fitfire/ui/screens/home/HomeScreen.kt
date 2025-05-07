@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,11 +61,11 @@ fun HomeScreen(navController: NavController) {
 
         // Image
         Image(
-            painter = painterResource(R.drawable.img_4),
+            painter = painterResource(R.drawable.img),
             contentDescription = "home",
             modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
+                .width(250.dp)
+                .height(200.dp)
                 .clip(MaterialTheme.shapes.medium) // Rounded corners
                 .shadow(4.dp) // Adds a shadow for depth
         )
@@ -125,7 +126,7 @@ fun HomeScreen(navController: NavController) {
 
             item {
                 FeatureButton(
-                    text = "Track your progress",
+                    text = "Track my progress",
                     onClick = { navController.navigate(ROUT_PROGRESSTRACKER) }
                 )
             }
