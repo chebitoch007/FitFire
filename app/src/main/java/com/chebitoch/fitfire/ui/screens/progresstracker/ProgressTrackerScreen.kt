@@ -16,13 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.chebitoch.fitfire.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProgressTrackerScreen(navController: NavController) {
+fun ProgressTrackerScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -141,5 +139,5 @@ fun GoalProgress(title: String, progress: Float) {
 @Preview(showBackground = true)
 @Composable
 fun ProgressTrackerScreenPreview() {
-    ProgressTrackerScreen(rememberNavController())
+    ProgressTrackerScreen()
 }

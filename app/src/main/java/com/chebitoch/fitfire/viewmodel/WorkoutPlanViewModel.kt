@@ -29,9 +29,13 @@ class WorkoutPlanViewModel(application: Application) : AndroidViewModel(applicat
 
     fun insertSamplePlans() = viewModelScope.launch {
         val samplePlans = listOf(
-            WorkoutPlan(name = "Full Body Strength", duration = "45 mins", level = "Intermediate", target = "Overall Strength", imageResId = R.drawable.ic_launcher_foreground),
-            WorkoutPlan(name = "Cardio Blast", duration = "30 mins", level = "Beginner", target = "Cardiovascular Health", imageResId = R.drawable.ic_launcher_foreground),
-            WorkoutPlan(name = "Leg Day Focus", duration = "60 mins", level = "Advanced", target = "Lower Body Strength", imageResId = R.drawable.ic_launcher_foreground)
+            WorkoutPlan(name = "Full Body Strength", duration = "45 mins", level = "Intermediate", target = "Overall Strength", imageResId = R.drawable.full_body_burn),
+            WorkoutPlan(name = "Cardio Endurance", duration = "30 mins", level = "Beginner", target = "Cardiovascular Health", imageResId = R.drawable.cardio_endurance),
+            WorkoutPlan(name = "Leg Day Plans", duration = "60 mins", level = "Advanced", target = "Lower Body Strength", imageResId = R.drawable.leg_day_blast),
+            WorkoutPlan(name = "Back Builder", duration = "70 mins", level = "Intermediate", target = "Back Muscle Build", imageResId = R.drawable.back_builder),
+            WorkoutPlan(name = "Core Crusher", duration = "100 mins", level = "Advanced", target = "Overall Strength", imageResId = R.drawable.core_crusher),
+            WorkoutPlan(name = "Arm Sculpt", duration = "30 mins", level = "Beginner", target = "Arm Strength", imageResId = R.drawable.arm_sculpt),
+            WorkoutPlan(name = "Quick Hitt", duration = "30 mins", level = "Intermediate", target = "Body Warmup", imageResId = R.drawable.quick_hitt),
             // Add more sample plans
         )
         repository.insertWorkoutPlans(samplePlans)

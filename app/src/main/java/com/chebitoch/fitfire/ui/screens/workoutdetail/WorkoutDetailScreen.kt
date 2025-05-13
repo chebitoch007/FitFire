@@ -16,15 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.chebitoch.fitfire.viewmodel.WorkoutPlanViewModel
 import com.chebitoch.fitfire.ui.theme.FitFireTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkoutDetailScreen(
-    navController: NavController,
     workoutId: Int,
     viewModel: WorkoutPlanViewModel = viewModel()
 ) {
@@ -109,6 +106,6 @@ fun WorkoutDetailScreen(
 @Composable
 fun WorkoutDetailScreenPreview() {
     FitFireTheme {
-        WorkoutDetailScreen(navController = rememberNavController(), workoutId = 1)
+        WorkoutDetailScreen(workoutId = 1)
     }
 }

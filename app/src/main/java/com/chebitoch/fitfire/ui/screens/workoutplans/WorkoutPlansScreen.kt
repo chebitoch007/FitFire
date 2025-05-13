@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ import com.chebitoch.fitfire.model.WorkoutPlan
 import com.chebitoch.fitfire.viewmodel.WorkoutPlanViewModel
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.Alignment
+import com.chebitoch.fitfire.navigation.ROUT_ADD_WORKOUT_PLAN
 
 
 
@@ -37,22 +39,29 @@ import androidx.compose.ui.Alignment
 @Composable
 fun WorkoutPlansScreen(
     navController: NavController,
-    viewModel: WorkoutPlanViewModel = viewModel(factory = WorkoutPlanViewModel.WorkoutPlanViewModelFactory(LocalContext.current.applicationContext as Application))
-){
+    viewModel: WorkoutPlanViewModel = viewModel(factory = WorkoutPlanViewModel.WorkoutPlanViewModelFactory(
+        LocalContext.current.applicationContext as Application
+    ))
+) {
     val workoutPlans by viewModel.allPlans.collectAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Workout Plans") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                    }
+                },
                 actions = {
-                    IconButton(onClick = { viewModel.insertSamplePlans() }) {
+                    IconButton(onClick = { navController.navigate(ROUT_ADD_WORKOUT_PLAN) }) { // Navigate here
                         Icon(Icons.Default.Add, contentDescription = "Add Plan", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.White
+                    titleContentColor = Color.White // Changed to white for better visibility
                 )
             )
         }
